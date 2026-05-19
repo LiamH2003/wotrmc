@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { CrossedSwords, Castle, Fire, Mountains } from 'react-game-icons'
+import GameIcon from './GameIcon'
 
 const STATS = [
   { label: 'Warriors Online', value: 147, suffix: '', icon: CrossedSwords },
@@ -85,7 +86,7 @@ function StatCard({
       className="text-center"
     >
       <div className="mb-3 flex justify-center">
-        {(() => { const Icon = stat.icon as any; return <Icon width={32} height={32} fill="#c9a84c" /> })()}
+        <GameIcon icon={stat.icon} size={32} />
       </div>
       <div className="font-cinzel-decorative text-3xl md:text-4xl text-gold font-bold">
         <AnimatedNumber target={stat.value} suffix={stat.suffix} />

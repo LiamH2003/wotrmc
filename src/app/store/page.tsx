@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { RallyTheTroops, Shield, WhiteTower, OpenTreasureChest } from 'react-game-icons'
+import GameIcon from '@/components/GameIcon'
 import PageHero from '@/components/PageHero'
 import FadeIn from '@/components/FadeIn'
 import Footer from '@/components/Footer'
@@ -43,7 +44,7 @@ export default function StorePage() {
                 <div className="relative border border-gold/15 bg-shadow p-5 h-full hover:border-gold/30 transition-colors duration-300 text-center">
                   <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-gold/40" />
                   <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-gold/40" />
-                  <div className="mb-3 flex justify-center">{(() => { const Icon = f.icon as any; return <Icon width={34} height={34} fill="#c9a84c" /> })()}</div>
+                  <div className="mb-3 flex justify-center"><GameIcon icon={f.icon} /></div>
                   <h3 className="font-cinzel text-[12px] text-parchment uppercase tracking-wider mb-2">{f.title}</h3>
                   <p className="font-garamond text-parchment/50 text-sm leading-relaxed">{f.body}</p>
                 </div>

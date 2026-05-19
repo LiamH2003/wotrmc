@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { BorderedShield, BattleAxe, Campfire } from 'react-game-icons'
+import GameIcon from '@/components/GameIcon'
 import PageHero from '@/components/PageHero'
 import FadeIn from '@/components/FadeIn'
 import Footer from '@/components/Footer'
@@ -181,7 +182,7 @@ export default function PlayNowPage() {
                   <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-gold/40" />
 
                   <div className="flex items-start justify-between mb-4">
-                    <span>{(() => { const Icon = pack.icon as any; return <Icon width={34} height={34} fill="#c9a84c" /> })()}</span>
+                    <GameIcon icon={pack.icon} />
                     <span className={`font-cinzel text-[9px] px-2 py-1 uppercase tracking-wider ${pack.tagColor}`}>
                       {pack.tag}
                     </span>

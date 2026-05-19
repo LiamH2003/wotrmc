@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [],
   },
+  transpilePackages: ['react-game-icons'],
 }
 
 export default nextConfig
