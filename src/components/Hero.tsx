@@ -69,22 +69,27 @@ export default function Hero() {
 
       {/* Main content */}
       <div className="relative text-center px-6 max-w-5xl mx-auto" style={{ zIndex: 10 }}>
-        {/* White Tree of Gondor emblem */}
+        {/* One Ring emblem */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.7, filter: 'blur(6px)' }}
-          animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-          transition={{ delay: 0.1, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, scale: 0.7, rotate: -15, filter: 'blur(6px)' }}
+          animate={{ opacity: 1, scale: 1, rotate: 0, filter: 'blur(0px)' }}
+          transition={{ delay: 0.1, duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
           className="flex justify-center mb-6"
         >
-          <div className="relative w-16 h-16 md:w-20 md:h-20">
+          <motion.div
+            animate={{ rotate: [0, 4, -4, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+            className="relative w-20 h-20 md:w-24 md:h-24"
+            style={{ filter: 'drop-shadow(0 0 18px rgba(201,168,76,0.55)) drop-shadow(0 0 6px rgba(201,168,76,0.3))' }}
+          >
             <Image
-              src="/white-tree.webp"
-              alt="White Tree of Gondor"
+              src="/ring.webp"
+              alt="The One Ring"
               fill
               className="object-contain"
-              style={{ filter: 'invert(1) sepia(1) saturate(2) hue-rotate(5deg) brightness(1.1)', mixBlendMode: 'screen', opacity: 0.85 }}
+              priority
             />
-          </div>
+          </motion.div>
         </motion.div>
 
         {/* Top decorative line */}
