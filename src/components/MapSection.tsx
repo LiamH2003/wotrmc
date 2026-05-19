@@ -1,7 +1,7 @@
 'use client'
 
-import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 import FadeIn from './FadeIn'
 
 const REGIONS = [
@@ -39,7 +39,7 @@ export default function MapSection() {
         </FadeIn>
 
         <div className="grid lg:grid-cols-2 gap-10 items-center">
-          {/* Map image */}
+          {/* Interactive map */}
           <FadeIn x={-30} y={0}>
             <div
               className="relative"
@@ -47,37 +47,93 @@ export default function MapSection() {
                 boxShadow: '0 0 80px rgba(201,168,76,0.1), 0 0 0 1px rgba(201,168,76,0.2)',
               }}
             >
-              {/* Corner ornaments */}
-              <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-gold/60 z-10" />
-              <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-gold/60 z-10" />
-              <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-gold/60 z-10" />
-              <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-gold/60 z-10" />
+              {/* Corner ornaments — above everything */}
+              <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-gold/60 z-30 pointer-events-none" />
+              <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-gold/60 z-30 pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-gold/60 z-30 pointer-events-none" />
+              <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-gold/60 z-30 pointer-events-none" />
 
-              <div className="relative overflow-hidden" style={{ aspectRatio: '1/1' }}>
-                <Image
-                  src="/map.webp"
-                  alt="Middle Earth map"
-                  fill
-                  className="object-cover"
-                  quality={85}
-                />
-                {/* Dark vignette overlay */}
+              {/* Map container with fixed aspect ratio */}
+              <div
+                className="relative overflow-hidden cursor-grab active:cursor-grabbing"
+                style={{ aspectRatio: '1/1' }}
+              >
+                <TransformWrapper
+                  initialScale={1}
+                  minScale={1}
+                  maxScale={6}
+                  wheel={{ step: 0.1 }}
+                  doubleClick={{ step: 0.7 }}
+                  limitToBounds={true}
+                >
+                  {({ zoomIn, zoomOut, resetTransform }) => (
+                    <>
+                      <TransformComponent
+                        wrapperStyle={{ width: '100%', height: '100%' }}
+                        contentStyle={{ width: '100%', height: '100%' }}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src="/map.webp"
+                          alt="Middle Earth map"
+                          className="w-full h-full object-cover select-none"
+                          draggable={false}
+                        />
+                      </TransformComponent>
+
+                      {/* Zoom controls */}
+                      <div className="absolute top-3 right-3 z-20 flex flex-col gap-1">
+                        <button
+                          onClick={() => zoomIn()}
+                          className="w-8 h-8 flex items-center justify-center bg-shadow/80 border border-gold/30 hover:border-gold/70 hover:bg-gold/10 text-gold font-bold text-lg leading-none transition-all duration-200 backdrop-blur-sm"
+                          aria-label="Zoom in"
+                        >
+                          +
+                        </button>
+                        <button
+                          onClick={() => zoomOut()}
+                          className="w-8 h-8 flex items-center justify-center bg-shadow/80 border border-gold/30 hover:border-gold/70 hover:bg-gold/10 text-gold font-bold text-lg leading-none transition-all duration-200 backdrop-blur-sm"
+                          aria-label="Zoom out"
+                        >
+                          −
+                        </button>
+                        <button
+                          onClick={() => resetTransform()}
+                          className="w-8 h-8 flex items-center justify-center bg-shadow/80 border border-gold/30 hover:border-gold/70 hover:bg-gold/10 text-gold/60 hover:text-gold text-base leading-none transition-all duration-200 backdrop-blur-sm"
+                          aria-label="Reset zoom"
+                          title="Reset"
+                        >
+                          ⟲
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </TransformWrapper>
+
+                {/* Dark vignette — pointer-events-none so it doesn't block map interaction */}
                 <div
-                  className="absolute inset-0 pointer-events-none"
+                  className="absolute inset-0 pointer-events-none z-10"
                   style={{
                     background: 'radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(10,8,6,0.6) 100%)',
                   }}
                 />
                 {/* Subtle gold tint */}
                 <div
-                  className="absolute inset-0 pointer-events-none"
+                  className="absolute inset-0 pointer-events-none z-10"
                   style={{ background: 'rgba(201,168,76,0.04)', mixBlendMode: 'overlay' }}
                 />
+
+                {/* Drag hint */}
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
+                  <p className="font-cinzel text-[9px] text-gold/40 uppercase tracking-[0.2em] whitespace-nowrap">
+                    Drag · Scroll to zoom
+                  </p>
+                </div>
               </div>
 
               {/* Animated scan line */}
               <motion.div
-                className="absolute left-0 right-0 h-px pointer-events-none z-10"
+                className="absolute left-0 right-0 h-px pointer-events-none z-20"
                 style={{ background: 'linear-gradient(to right, transparent, rgba(201,168,76,0.4), transparent)' }}
                 animate={{ top: ['10%', '90%', '10%'] }}
                 transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
@@ -112,7 +168,7 @@ export default function MapSection() {
                 </div>
               </div>
 
-              <div className="border border-gold/15 bg-shadow p-5">
+              <div className="relative border border-gold/15 bg-shadow p-5">
                 <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-gold/40" />
                 <p className="font-cinzel text-[11px] text-gold/50 uppercase tracking-[0.2em] mb-2">Live Map</p>
                 <p className="font-garamond text-parchment/50 text-sm leading-relaxed mb-4">
