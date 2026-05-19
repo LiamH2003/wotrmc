@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const links = [
   { label: 'Home', href: '/' },
@@ -35,8 +36,14 @@ export default function Nav() {
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="group flex items-center gap-3">
-          <div className="w-8 h-8 border border-gold/40 group-hover:border-gold flex items-center justify-center transition-all duration-300">
-            <span className="font-cinzel-decorative text-gold text-sm font-bold">W</span>
+          <div className="w-8 h-8 border border-gold/40 group-hover:border-gold flex items-center justify-center transition-all duration-300 overflow-hidden">
+            <Image
+              src="/white-tree.webp"
+              alt="War of the Ring"
+              width={22}
+              height={22}
+              style={{ filter: 'invert(1) sepia(1) saturate(2) hue-rotate(5deg) brightness(1.1)', mixBlendMode: 'screen' }}
+            />
           </div>
           <div className="flex flex-col">
             <span className="font-cinzel-decorative text-parchment group-hover:text-gold text-sm leading-none tracking-wider transition-colors duration-300">

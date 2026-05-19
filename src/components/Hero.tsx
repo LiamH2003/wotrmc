@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import EmberParticles from './EmberParticles'
 
 const TITLE = ['THE', 'WAR', 'OF', 'THE', 'RING']
@@ -24,24 +25,22 @@ export default function Hero() {
 
   return (
     <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
-      {/* Video background */}
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover"
-        src="/hero.mp4"
-        // Replace /hero.mp4 with your cinematic battle/flyover footage
+      {/* Hero background image */}
+      <Image
+        src="/ruins.webp"
+        alt=""
+        fill
+        priority
+        quality={90}
+        className="object-cover object-center"
       />
 
-      {/* Fallback gradient (shown if video doesn't load) */}
+      {/* Colour grade — warm dark overlay to unify with site palette */}
       <div
         className="absolute inset-0"
         style={{
-          background:
-            'linear-gradient(160deg, #1a0e04 0%, #0f0a06 30%, #0a0806 60%, #12080a 100%)',
+          background: 'linear-gradient(160deg, rgba(12,7,3,0.55) 0%, rgba(10,8,6,0.35) 50%, rgba(10,8,6,0.6) 100%)',
+          mixBlendMode: 'multiply',
         }}
       />
 
@@ -70,6 +69,24 @@ export default function Hero() {
 
       {/* Main content */}
       <div className="relative text-center px-6 max-w-5xl mx-auto" style={{ zIndex: 10 }}>
+        {/* White Tree of Gondor emblem */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.7, filter: 'blur(6px)' }}
+          animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+          transition={{ delay: 0.1, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+          className="flex justify-center mb-6"
+        >
+          <div className="relative w-16 h-16 md:w-20 md:h-20">
+            <Image
+              src="/white-tree.webp"
+              alt="White Tree of Gondor"
+              fill
+              className="object-contain"
+              style={{ filter: 'invert(1) sepia(1) saturate(2) hue-rotate(5deg) brightness(1.1)', mixBlendMode: 'screen', opacity: 0.85 }}
+            />
+          </div>
+        </motion.div>
+
         {/* Top decorative line */}
         <motion.div
           initial={{ scaleX: 0, opacity: 0 }}
