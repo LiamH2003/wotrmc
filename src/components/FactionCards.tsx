@@ -12,7 +12,6 @@ const FACTIONS = [
     lore: 'Gondor, Rohan, the Elves of Lothlórien, and the Dwarves of Erebor stand united against the rising shadow. Take up arms in defense of all that is good and fair in Middle Earth.',
     races: ['Gondor', 'Rohan', 'Elves', 'Dwarves', 'Hobbits'],
     players: 312,
-    icon: '🤍',
     accent: '#7ba7bc',
     accentDim: 'rgba(123,167,188,0.15)',
     borderBase: 'rgba(123,167,188,0.2)',
@@ -28,7 +27,6 @@ const FACTIONS = [
     lore: "The armies of Mordor, Isengard, and the Haradrim march to cover all lands in darkness. Serve the Dark Lord Sauron and bring Middle Earth to its knees beneath the Eye.",
     races: ['Orcs', 'Uruk-hai', 'Haradrim', 'Nazgûl', 'Trolls'],
     players: 289,
-    icon: '👁️',
     accent: '#c0392b',
     accentDim: 'rgba(192,57,43,0.15)',
     borderBase: 'rgba(192,57,43,0.2)',
@@ -112,13 +110,6 @@ export default function FactionCards() {
               <div className="relative p-8">
                 <div className="flex items-start justify-between mb-6">
                   <div>
-                    <motion.div
-                      animate={{ scale: hovered === faction.id ? 1.15 : 1 }}
-                      transition={{ duration: 0.3 }}
-                      className="text-4xl mb-3 select-none"
-                    >
-                      {faction.icon}
-                    </motion.div>
                     <h3 className="font-cinzel-decorative text-2xl md:text-3xl font-bold" style={{ color: faction.accent }}>
                       {faction.name}
                     </h3>
