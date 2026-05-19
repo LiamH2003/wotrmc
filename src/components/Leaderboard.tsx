@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useInViewNative } from '@/hooks/useInViewNative'
 import FadeIn from './FadeIn'
 
 type Tab = 'warriors' | 'factions'
@@ -30,18 +30,19 @@ const RANK_COLOR = ['text-yellow-400', 'text-slate-300', 'text-amber-600']
 const RANK_ICON = ['👑', '🥈', '🥉']
 
 function TableRow({ children, index }: { children: React.ReactNode; index: number }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, amount: 0 })
+  const [ref, inView] = useInViewNative<HTMLDivElement>()
   return (
-    <motion.div
+    <div
       ref={ref}
-      initial={{ opacity: 0, x: -16 }}
-      animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -16 }}
-      transition={{ delay: index * 0.04, duration: 0.5 }}
       className="grid grid-cols-6 gap-4 px-5 py-4 border-b border-gold/5 last:border-0 hover:bg-gold/[0.03] transition-colors duration-200"
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'none' : 'translateX(-16px)',
+        transition: `opacity 0.5s ${index * 0.04}s ease, transform 0.5s ${index * 0.04}s ease`,
+      }}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }
 

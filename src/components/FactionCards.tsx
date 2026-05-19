@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { useInViewNative } from '@/hooks/useInViewNative'
 import FadeIn from './FadeIn'
 
 const FACTIONS = [
@@ -39,10 +40,8 @@ const FACTIONS = [
 
 export default function FactionCards() {
   const [hovered, setHovered] = useState<string | null>(null)
-  const card1Ref = useRef<HTMLDivElement>(null)
-  const card2Ref = useRef<HTMLDivElement>(null)
-  const card1InView = useInView(card1Ref, { once: true, amount: 0 })
-  const card2InView = useInView(card2Ref, { once: true, amount: 0 })
+  const [card1Ref, card1InView] = useInViewNative<HTMLDivElement>()
+  const [card2Ref, card2InView] = useInViewNative<HTMLDivElement>()
   const inViews = [card1InView, card2InView]
   const cardRefs = [card1Ref, card2Ref]
 
@@ -69,26 +68,27 @@ export default function FactionCards() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {FACTIONS.map((faction, i) => (
-            <motion.div
+            <div
               key={faction.id}
               ref={cardRefs[i]}
-              initial={{ opacity: 0, x: i === 0 ? -40 : 40 }}
-              animate={inViews[i] ? { opacity: 1, x: 0 } : { opacity: 0, x: i === 0 ? -40 : 40 }}
-              transition={{ duration: 0.9, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              onHoverStart={() => setHovered(faction.id)}
-              onHoverEnd={() => setHovered(null)}
+              onMouseEnter={() => setHovered(faction.id)}
+              onMouseLeave={() => setHovered(null)}
               className="relative group cursor-pointer overflow-hidden"
               style={{
                 border: `1px solid ${hovered === faction.id ? faction.borderHover : faction.borderBase}`,
-                transition: 'border-color 0.4s ease',
+                opacity: inViews[i] ? 1 : 0,
+                transform: inViews[i] ? 'none' : `translateX(${i === 0 ? -40 : 40}px)`,
+                transition: `opacity 0.9s ${i * 0.1}s cubic-bezier(0.22,1,0.36,1), transform 0.9s ${i * 0.1}s cubic-bezier(0.22,1,0.36,1), border-color 0.4s ease`,
               }}
             >
               <div className="absolute inset-0 transition-opacity duration-500" style={{ background: faction.gradient }} />
-              <motion.div
-                animate={{ opacity: hovered === faction.id ? 1 : 0 }}
-                transition={{ duration: 0.4 }}
+              <div
                 className="absolute inset-0 pointer-events-none"
-                style={{ background: `radial-gradient(ellipse at 50% 0%, ${faction.accentDim} 0%, transparent 70%)` }}
+                style={{
+                  background: `radial-gradient(ellipse at 50% 0%, ${faction.accentDim} 0%, transparent 70%)`,
+                  opacity: hovered === faction.id ? 1 : 0,
+                  transition: 'opacity 0.4s ease',
+                }}
               />
 
               {[
@@ -142,7 +142,7 @@ export default function FactionCards() {
                   Pledge to {faction.name.split(' ').pop()}
                 </motion.a>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 

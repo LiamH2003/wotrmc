@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 import FadeIn from './FadeIn'
+import { useInViewNative } from '@/hooks/useInViewNative'
 
 const REGIONS = [
   { name: 'The Shire', faction: 'Hobbits', color: 'text-green-400' },
@@ -14,6 +15,8 @@ const REGIONS = [
 ]
 
 export default function MapSection() {
+  const [regionsRef, regionsInView] = useInViewNative<HTMLDivElement>()
+
   return (
     <section className="relative py-24 bg-shadow-mid overflow-hidden">
       <div
@@ -148,22 +151,23 @@ export default function MapSection() {
                 <p className="font-cinzel text-gold/50 text-[11px] tracking-[0.35em] uppercase mb-4">
                   Key Territories
                 </p>
-                <div className="grid grid-cols-2 gap-2">
+                <div ref={regionsRef} className="grid grid-cols-2 gap-2">
                   {REGIONS.map((r, i) => (
-                    <motion.div
+                    <div
                       key={r.name}
-                      initial={{ opacity: 0, x: 16 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.07, duration: 0.5 }}
                       className="flex items-center gap-2.5 border border-gold/10 bg-shadow px-3 py-2.5 hover:border-gold/25 transition-colors duration-300"
+                      style={{
+                        opacity: regionsInView ? 1 : 0,
+                        transform: regionsInView ? 'none' : 'translateX(16px)',
+                        transition: `opacity 0.5s ${i * 0.07}s ease, transform 0.5s ${i * 0.07}s ease`,
+                      }}
                     >
                       <span className="w-1 h-1 rounded-full bg-gold/60 shrink-0" />
                       <div>
                         <p className="font-cinzel text-[12px] text-parchment/80">{r.name}</p>
                         <p className={`font-cinzel text-[9px] uppercase tracking-wider ${r.color}`}>{r.faction}</p>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>

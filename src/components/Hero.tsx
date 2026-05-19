@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import EmberParticles from './EmberParticles'
@@ -11,7 +11,12 @@ const GOLD_WORDS = new Set([1, 2, 3]) // WAR OF THE
 export default function Hero() {
   const [playerCount, setPlayerCount] = useState<number | null>(null)
   const [serverOnline, setServerOnline] = useState(true)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setMounted(true))
+    return () => cancelAnimationFrame(raf)
+  }, [])
 
   useEffect(() => {
     fetch('/api/players')
@@ -22,6 +27,26 @@ export default function Hero() {
       })
       .catch(() => {})
   }, [])
+
+  const ease = 'cubic-bezier(0.22,1,0.36,1)'
+
+  const fadeUp = (delay: number, duration = 0.9) => ({
+    opacity: mounted ? 1 : 0,
+    transform: mounted ? 'none' : 'translateY(40px)',
+    transition: `opacity ${duration}s ${delay}s ${ease}, transform ${duration}s ${delay}s ${ease}`,
+  })
+
+  const fadeIn = (delay: number, duration = 1) => ({
+    opacity: mounted ? 1 : 0,
+    transition: `opacity ${duration}s ${delay}s ease`,
+  })
+
+  const scaleX = (delay: number) => ({
+    transform: mounted ? 'scaleX(1)' : 'scaleX(0)',
+    opacity: mounted ? 1 : 0,
+    transformOrigin: 'center',
+    transition: `transform 1.6s ${delay}s ease, opacity 1.6s ${delay}s ease`,
+  })
 
   return (
     <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
@@ -35,7 +60,7 @@ export default function Hero() {
         className="object-cover object-center"
       />
 
-      {/* Colour grade — warm dark overlay to unify with site palette */}
+      {/* Colour grade */}
       <div
         className="absolute inset-0"
         style={{
@@ -61,21 +86,16 @@ export default function Hero() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background:
-            'radial-gradient(ellipse at 50% 40%, transparent 30%, rgba(10,8,6,0.75) 100%)',
+          background: 'radial-gradient(ellipse at 50% 40%, transparent 30%, rgba(10,8,6,0.75) 100%)',
           zIndex: 6,
         }}
       />
 
       {/* Main content */}
       <div className="relative text-center px-6 max-w-5xl mx-auto" style={{ zIndex: 10 }}>
-        {/* One Ring emblem */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.7, rotate: -15, filter: 'blur(6px)' }}
-          animate={{ opacity: 1, scale: 1, rotate: 0, filter: 'blur(0px)' }}
-          transition={{ delay: 0.1, duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-          className="flex justify-center mb-6"
-        >
+
+        {/* One Ring emblem — CSS entrance + Framer Motion idle rotation */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', ...fadeUp(0.1, 1.5) }}>
           <motion.div
             animate={{ rotate: [0, 4, -4, 0] }}
             transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
@@ -90,83 +110,63 @@ export default function Hero() {
               priority
             />
           </motion.div>
-        </motion.div>
+        </div>
 
         {/* Top decorative line */}
-        <motion.div
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ duration: 1.6, ease: 'easeInOut' }}
+        <div
           className="h-px mx-auto w-56 mb-8"
-          style={{ background: 'linear-gradient(to right, transparent, #c9a84c, transparent)' }}
+          style={{ background: 'linear-gradient(to right, transparent, #c9a84c, transparent)', ...scaleX(0) }}
         />
 
         {/* Eyebrow */}
-        <motion.p
-          initial={{ opacity: 0, letterSpacing: '0.5em' }}
-          animate={{ opacity: 1, letterSpacing: '0.35em' }}
-          transition={{ delay: 0.3, duration: 1.2 }}
+        <p
           className="font-cinzel text-gold/60 text-[11px] uppercase tracking-[0.35em] mb-6"
+          style={fadeIn(0.3, 1.2)}
         >
           A Minecraft Server · Middle Earth
-        </motion.p>
+        </p>
 
         {/* Main title — word by word */}
         <h1 className="font-cinzel-decorative font-black leading-[1.05] mb-4">
           {TITLE.map((word, i) => (
-            <motion.span
+            <span
               key={word + i}
-              initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{
-                delay: 0.5 + i * 0.18,
-                duration: 0.9,
-                ease: [0.22, 1, 0.36, 1],
-              }}
               className={`inline-block mr-3 md:mr-5 text-5xl md:text-7xl lg:text-8xl xl:text-9xl ${
                 GOLD_WORDS.has(i) ? 'text-gold' : 'text-parchment'
               }`}
+              style={fadeUp(0.5 + i * 0.18)}
             >
               {word}
-            </motion.span>
+            </span>
           ))}
         </h1>
 
         {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.6, duration: 1 }}
+        <p
           className="font-garamond italic text-parchment/50 text-xl md:text-2xl mb-2"
+          style={fadeIn(1.6)}
         >
           "One Ring to rule them all…"
-        </motion.p>
+        </p>
 
         {/* Server IP */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.9, duration: 1 }}
+        <p
           className="font-cinzel text-[11px] text-gold/50 tracking-[0.3em] uppercase mb-10"
+          style={fadeIn(1.9)}
         >
           play.wotrmc.com
-        </motion.p>
+        </p>
 
         {/* Bottom decorative line */}
-        <motion.div
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ duration: 1.6, delay: 0.6, ease: 'easeInOut' }}
+        <div
           className="h-px mx-auto w-56 mb-10"
-          style={{ background: 'linear-gradient(to right, transparent, #c9a84c55, transparent)' }}
+          style={{ background: 'linear-gradient(to right, transparent, #c9a84c55, transparent)', ...scaleX(0.6) }}
         />
 
         {/* CTA row */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        <div
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          style={fadeUp(2, 0.8)}
         >
           {/* Play Now button */}
           <motion.a
@@ -178,9 +178,7 @@ export default function Hero() {
             <span className="relative z-10">Enter Middle Earth</span>
             <div
               className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%)',
-              }}
+              style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%)' }}
             />
           </motion.a>
 
@@ -197,9 +195,8 @@ export default function Hero() {
               {playerCount !== null ? `${playerCount} Warriors Online` : 'Server Online'}
             </span>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
-
     </section>
   )
 }

@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useInViewNative } from '@/hooks/useInViewNative'
 import FadeIn from './FadeIn'
 
 interface NewsItem {
@@ -84,10 +85,8 @@ export default function NewsSection() {
   const [active, setActive] = useState(0)
   const { days, hours, minutes, seconds } = useCountdown(EVENT_DATE)
 
-  const leftRef = useRef<HTMLDivElement>(null)
-  const rightRef = useRef<HTMLDivElement>(null)
-  const leftInView = useInView(leftRef, { once: true, amount: 0 })
-  const rightInView = useInView(rightRef, { once: true, amount: 0 })
+  const [leftRef, leftInView] = useInViewNative<HTMLDivElement>()
+  const [rightRef, rightInView] = useInViewNative<HTMLDivElement>()
 
   useEffect(() => {
     const id = setInterval(() => setActive((prev) => (prev + 1) % NEWS.length), 6000)
@@ -122,11 +121,13 @@ export default function NewsSection() {
 
         <div className="grid lg:grid-cols-2 gap-8 xl:gap-12">
           {/* News feed */}
-          <motion.div
+          <div
             ref={leftRef}
-            initial={{ opacity: 0, x: -30 }}
-            animate={leftInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-            transition={{ duration: 0.8 }}
+            style={{
+              opacity: leftInView ? 1 : 0,
+              transform: leftInView ? 'none' : 'translateX(-30px)',
+              transition: 'opacity 0.8s ease, transform 0.8s ease',
+            }}
           >
             <h3 className="font-cinzel text-[11px] text-gold/60 uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
               <span className="flex-1 h-px bg-gold/20" />
@@ -181,15 +182,17 @@ export default function NewsSection() {
                 />
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Countdown */}
-          <motion.div
+          <div
             ref={rightRef}
-            initial={{ opacity: 0, x: 30 }}
-            animate={rightInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
             className="flex flex-col justify-center"
+            style={{
+              opacity: rightInView ? 1 : 0,
+              transform: rightInView ? 'none' : 'translateX(30px)',
+              transition: 'opacity 0.8s 0.1s ease, transform 0.8s 0.1s ease',
+            }}
           >
             <h3 className="font-cinzel text-[11px] text-gold/60 uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
               <span className="flex-1 h-px bg-gold/20" />
@@ -250,7 +253,7 @@ export default function NewsSection() {
                 </a>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

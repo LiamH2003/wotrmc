@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import { CrossedSwords, Castle, Fire, Mountains } from 'react-game-icons'
 import GameIcon from './GameIcon'
+import { useInViewNative } from '@/hooks/useInViewNative'
 
 const STATS = [
   { label: 'Warriors Online', value: 147, suffix: '', icon: CrossedSwords },
@@ -12,13 +12,11 @@ const STATS = [
   { label: 'Days of War', value: 365, suffix: '+', icon: Mountains },
 ]
 
-function AnimatedNumber({ target, suffix }: { target: number; suffix: string }) {
+function AnimatedNumber({ target, suffix, run }: { target: number; suffix: string; run: boolean }) {
   const [current, setCurrent] = useState(0)
-  const ref = useRef<HTMLSpanElement>(null)
-  const isInView = useInView(ref, { once: true, amount: 0 })
 
   useEffect(() => {
-    if (!isInView) return
+    if (!run) return
     let startTime: number | null = null
     const duration = 2200
     const step = (ts: number) => {
@@ -29,10 +27,10 @@ function AnimatedNumber({ target, suffix }: { target: number; suffix: string }) 
       if (progress < 1) requestAnimationFrame(step)
     }
     requestAnimationFrame(step)
-  }, [isInView, target])
+  }, [run, target])
 
   return (
-    <span ref={ref}>
+    <span>
       {current.toLocaleString()}
       {suffix}
     </span>
@@ -40,16 +38,17 @@ function AnimatedNumber({ target, suffix }: { target: number; suffix: string }) 
 }
 
 export default function ServerStatsBar() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const isInView = useInView(sectionRef, { once: true, amount: 0 })
+  const [sectionRef, isInView] = useInViewNative<HTMLElement>()
 
   return (
-    <motion.section
+    <section
       ref={sectionRef}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.8 }}
       className="relative bg-shadow-mid border-y border-gold/15 py-10 overflow-hidden"
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? 'none' : 'translateY(20px)',
+        transition: 'opacity 0.8s ease, transform 0.8s ease',
+      }}
     >
       <div
         className="absolute top-0 left-0 right-0 h-px"
@@ -62,38 +61,27 @@ export default function ServerStatsBar() {
 
       <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
         {STATS.map((stat, i) => (
-          <StatCard key={stat.label} stat={stat} index={i} parentInView={isInView} />
+          <div
+            key={stat.label}
+            className="text-center"
+            style={{
+              opacity: isInView ? 1 : 0,
+              transform: isInView ? 'none' : 'translateY(20px)',
+              transition: `opacity 0.7s ${i * 0.1}s ease, transform 0.7s ${i * 0.1}s ease`,
+            }}
+          >
+            <div className="mb-3 flex justify-center">
+              <GameIcon icon={stat.icon} size={32} />
+            </div>
+            <div className="font-cinzel-decorative text-3xl md:text-4xl text-gold font-bold">
+              <AnimatedNumber target={stat.value} suffix={stat.suffix} run={isInView} />
+            </div>
+            <div className="font-cinzel text-[10px] text-parchment/40 uppercase tracking-[0.25em] mt-2">
+              {stat.label}
+            </div>
+          </div>
         ))}
       </div>
-    </motion.section>
-  )
-}
-
-function StatCard({
-  stat,
-  index,
-  parentInView,
-}: {
-  stat: (typeof STATS)[number]
-  index: number
-  parentInView: boolean
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={parentInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ delay: index * 0.1, duration: 0.7 }}
-      className="text-center"
-    >
-      <div className="mb-3 flex justify-center">
-        <GameIcon icon={stat.icon} size={32} />
-      </div>
-      <div className="font-cinzel-decorative text-3xl md:text-4xl text-gold font-bold">
-        <AnimatedNumber target={stat.value} suffix={stat.suffix} />
-      </div>
-      <div className="font-cinzel text-[10px] text-parchment/40 uppercase tracking-[0.25em] mt-2">
-        {stat.label}
-      </div>
-    </motion.div>
+    </section>
   )
 }
