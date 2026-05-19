@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gold: #c9a84c;
+  --shadow-bg: #0a0806;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0a0806;
+  color: #f0deb4;
+  font-family: var(--font-garamond), Georgia, serif;
+  overflow-x: hidden;
+}
+
+/* Subtle page-wide dot texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(201, 168, 76, 0.025) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0806;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9a84c44;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c9a84c88;
+}
+
+/* Gallery horizontal scroll */
+.gallery-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 168, 76, 0.3) transparent;
+}
+.gallery-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.gallery-scroll::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.3);
+  border-radius: 2px;
+}
+
+/* Section divider line */
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #c9a84c55, transparent);
+}
+
+/* Corner ornament mixin helper */
+.corner-ornament {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: #c9a84c66;
+}
+
+/* Gold glow on focus for interactive elements */
+a:focus-visible,
+button:focus-visible {
+  outline: 1px solid #c9a84c66;
+  outline-offset: 3px;
+}
+
+/* Clip-path utility */
+.clip-skew {
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+}
