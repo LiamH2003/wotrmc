@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { CrossedSwords, TreasureMap, Crown, ScrollUnfurled, LinkedRings, FireRing } from 'react-game-icons'
 import PageHero from '@/components/PageHero'
 import FadeIn from '@/components/FadeIn'
 import Footer from '@/components/Footer'
@@ -23,12 +24,12 @@ const FAMOUS_BUILDS = [
 ]
 
 const ACTIVITIES = [
-  { icon: '⚔️', title: 'Siege Warfare', desc: 'Organize your faction, raise Troops, and launch coordinated sieges against rival Seats.' },
-  { icon: '🗺️', title: 'Dungeon Exploration', desc: 'Venture into hidden dungeons to find Artifacts, Legendary Weapons, and the Rings of Power.' },
-  { icon: '👑', title: 'Kingdom Building', desc: 'Found a Seat, recruit residents, and build your own corner of Middle Earth.' },
-  { icon: '📜', title: 'Quest System', desc: 'Complete lore-driven quests that earn Renown and unlock exclusive titles and roles.' },
-  { icon: '🤝', title: 'Political Alliances', desc: 'Forge treaties, declare war, and navigate the shifting politics of Middle Earth.' },
-  { icon: '💍', title: 'One Ring Quest', desc: 'A special server-wide quest chain tied to the fate of the One Ring itself.' },
+  { icon: CrossedSwords, title: 'Siege Warfare', desc: 'Organize your faction, raise Troops, and launch coordinated sieges against rival Seats.' },
+  { icon: TreasureMap, title: 'Dungeon Exploration', desc: 'Venture into hidden dungeons to find Artifacts, Legendary Weapons, and the Rings of Power.' },
+  { icon: Crown, title: 'Kingdom Building', desc: 'Found a Seat, recruit residents, and build your own corner of Middle Earth.' },
+  { icon: ScrollUnfurled, title: 'Quest System', desc: 'Complete lore-driven quests that earn Renown and unlock exclusive titles and roles.' },
+  { icon: LinkedRings, title: 'Political Alliances', desc: 'Forge treaties, declare war, and navigate the shifting politics of Middle Earth.' },
+  { icon: FireRing, title: 'One Ring Quest', desc: 'A special server-wide quest chain tied to the fate of the One Ring itself.' },
 ]
 
 const FAQ = [
@@ -153,7 +154,7 @@ export default function InfoPage() {
                 <div className="relative border border-gold/15 bg-shadow-mid p-6 hover:border-gold/30 transition-colors duration-300 h-full group">
                   <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-gold/30 group-hover:border-gold/60 transition-colors" />
                   <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-gold/30 group-hover:border-gold/60 transition-colors" />
-                  <div className="text-3xl mb-3">{a.icon}</div>
+                  <div className="mb-3">{(() => { const Icon = a.icon as any; return <Icon width={34} height={34} fill="#c9a84c" /> })()}</div>
                   <h3 className="font-cinzel text-[13px] text-parchment uppercase tracking-wider mb-2">{a.title}</h3>
                   <p className="font-garamond text-parchment/50 text-sm leading-relaxed">{a.desc}</p>
                 </div>

@@ -2,12 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
+import { CrossedSwords, Castle, Fire, Mountains } from 'react-game-icons'
 
 const STATS = [
-  { label: 'Warriors Online', value: 147, suffix: '', icon: '⚔️' },
-  { label: 'Total Players', value: 8420, suffix: '+', icon: '🏰' },
-  { label: 'Battles Fought', value: 1337, suffix: '', icon: '🔥' },
-  { label: 'Days of War', value: 365, suffix: '+', icon: '🌍' },
+  { label: 'Warriors Online', value: 147, suffix: '', icon: CrossedSwords },
+  { label: 'Total Players', value: 8420, suffix: '+', icon: Castle },
+  { label: 'Battles Fought', value: 1337, suffix: '', icon: Fire },
+  { label: 'Days of War', value: 365, suffix: '+', icon: Mountains },
 ]
 
 function AnimatedNumber({ target, suffix }: { target: number; suffix: string }) {
@@ -83,7 +84,9 @@ function StatCard({
       transition={{ delay: index * 0.1, duration: 0.7 }}
       className="text-center"
     >
-      <div className="text-3xl mb-3 select-none">{stat.icon}</div>
+      <div className="mb-3 flex justify-center">
+        {(() => { const Icon = stat.icon as any; return <Icon width={32} height={32} fill="#c9a84c" /> })()}
+      </div>
       <div className="font-cinzel-decorative text-3xl md:text-4xl text-gold font-bold">
         <AnimatedNumber target={stat.value} suffix={stat.suffix} />
       </div>

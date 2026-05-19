@@ -1,15 +1,16 @@
 'use client'
 
 import { useState } from 'react'
+import { RallyTheTroops, Shield, WhiteTower, OpenTreasureChest } from 'react-game-icons'
 import PageHero from '@/components/PageHero'
 import FadeIn from '@/components/FadeIn'
 import Footer from '@/components/Footer'
 
 const FEATURES = [
-  { icon: '🌍', title: 'Community Benefit', body: 'Every donation unlocks perks for the entire server within 24 hours — not just the buyer.' },
-  { icon: '⚖️', title: 'Non Pay-to-Win', body: 'No gear, weapons, or combat advantages are sold. Purchases are purely cosmetic or quality-of-life.' },
-  { icon: '🏰', title: 'Funds the Server', body: 'Your support keeps Middle Earth online, funds new builds, and enables future seasons.' },
-  { icon: '🎁', title: 'PrimaPacks', body: 'Special donation tiers that trigger server-wide bonuses like XP boosts, events, and loot drops.' },
+  { icon: RallyTheTroops, title: 'Community Benefit', body: 'Every donation unlocks perks for the entire server within 24 hours — not just the buyer.' },
+  { icon: Shield, title: 'Non Pay-to-Win', body: 'No gear, weapons, or combat advantages are sold. Purchases are purely cosmetic or quality-of-life.' },
+  { icon: WhiteTower, title: 'Funds the Server', body: 'Your support keeps Middle Earth online, funds new builds, and enables future seasons.' },
+  { icon: OpenTreasureChest, title: 'PrimaPacks', body: 'Special donation tiers that trigger server-wide bonuses like XP boosts, events, and loot drops.' },
 ]
 
 export default function StorePage() {
@@ -42,7 +43,7 @@ export default function StorePage() {
                 <div className="relative border border-gold/15 bg-shadow p-5 h-full hover:border-gold/30 transition-colors duration-300 text-center">
                   <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-gold/40" />
                   <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-gold/40" />
-                  <div className="text-3xl mb-3">{f.icon}</div>
+                  <div className="mb-3 flex justify-center">{(() => { const Icon = f.icon as any; return <Icon width={34} height={34} fill="#c9a84c" /> })()}</div>
                   <h3 className="font-cinzel text-[12px] text-parchment uppercase tracking-wider mb-2">{f.title}</h3>
                   <p className="font-garamond text-parchment/50 text-sm leading-relaxed">{f.body}</p>
                 </div>
