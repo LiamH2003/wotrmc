@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
+import FadeIn from './FadeIn'
 
 interface NewsItem {
   id: number
@@ -56,13 +57,11 @@ const CATEGORY_STYLE: Record<NewsItem['category'], string> = {
   Lore: 'bg-purple-800/90 text-parchment',
 }
 
-// Next major event: Summer Solstice, fitting for LOTR
 const EVENT_DATE = new Date('2026-06-21T20:00:00')
 const EVENT_TITLE = 'The Battle for Middle Earth — Season IV Launch'
 
 function useCountdown(target: Date) {
   const [t, setT] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
-
   useEffect(() => {
     const calc = () => {
       const diff = target.getTime() - Date.now()
@@ -78,7 +77,6 @@ function useCountdown(target: Date) {
     const id = setInterval(calc, 1000)
     return () => clearInterval(id)
   }, [target])
-
   return t
 }
 
@@ -86,7 +84,11 @@ export default function NewsSection() {
   const [active, setActive] = useState(0)
   const { days, hours, minutes, seconds } = useCountdown(EVENT_DATE)
 
-  // Auto-cycle news items
+  const leftRef = useRef<HTMLDivElement>(null)
+  const rightRef = useRef<HTMLDivElement>(null)
+  const leftInView = useInView(leftRef, { once: true, amount: 0 })
+  const rightInView = useInView(rightRef, { once: true, amount: 0 })
+
   useEffect(() => {
     const id = setInterval(() => setActive((prev) => (prev + 1) % NEWS.length), 6000)
     return () => clearInterval(id)
@@ -94,7 +96,6 @@ export default function NewsSection() {
 
   return (
     <section className="relative py-24 bg-shadow overflow-hidden">
-      {/* Subtle horizontal rule lines in background */}
       <div
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{
@@ -106,14 +107,7 @@ export default function NewsSection() {
       />
 
       <div className="relative max-w-6xl mx-auto px-6">
-        {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
+        <FadeIn className="text-center mb-16">
           <p className="font-cinzel text-gold/50 text-[11px] tracking-[0.35em] uppercase mb-3">
             Chronicles of Middle Earth
           </p>
@@ -124,14 +118,14 @@ export default function NewsSection() {
             className="mt-5 mx-auto w-48 h-px"
             style={{ background: 'linear-gradient(to right, transparent, #c9a84c55, transparent)' }}
           />
-        </motion.div>
+        </FadeIn>
 
         <div className="grid lg:grid-cols-2 gap-8 xl:gap-12">
           {/* News feed */}
           <motion.div
+            ref={leftRef}
             initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            animate={leftInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
             transition={{ duration: 0.8 }}
           >
             <h3 className="font-cinzel text-[11px] text-gold/60 uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
@@ -142,36 +136,24 @@ export default function NewsSection() {
 
             <div className="space-y-1">
               {NEWS.map((item, i) => (
-                <div
-                  key={item.id}
-                  onClick={() => setActive(i)}
-                  className="cursor-pointer"
-                >
+                <div key={item.id} onClick={() => setActive(i)} className="cursor-pointer">
                   <motion.div
                     animate={{
                       borderLeftColor: active === i ? '#c9a84c' : 'rgba(201,168,76,0.12)',
-                      backgroundColor:
-                        active === i ? 'rgba(201,168,76,0.05)' : 'transparent',
+                      backgroundColor: active === i ? 'rgba(201,168,76,0.05)' : 'transparent',
                     }}
                     transition={{ duration: 0.3 }}
-                    className="border-l-2 pl-4 py-3 pr-3 transition-colors duration-200"
+                    className="border-l-2 pl-4 py-3 pr-3"
                   >
                     <div className="flex items-center gap-2 mb-1.5">
-                      <span
-                        className={`font-cinzel text-[9px] px-2 py-0.5 uppercase tracking-wider ${CATEGORY_STYLE[item.category]}`}
-                      >
+                      <span className={`font-cinzel text-[9px] px-2 py-0.5 uppercase tracking-wider ${CATEGORY_STYLE[item.category]}`}>
                         {item.category}
                       </span>
                       <span className="font-cinzel text-[10px] text-parchment/30">
-                        {new Date(item.date).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                        })}
+                        {new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </span>
                     </div>
-
                     <p className="font-cinzel text-[13px] text-parchment/80">{item.title}</p>
-
                     <AnimatePresence>
                       {active === i && (
                         <motion.p
@@ -190,15 +172,12 @@ export default function NewsSection() {
               ))}
             </div>
 
-            {/* Dots */}
             <div className="flex gap-2 mt-6 justify-center">
               {NEWS.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setActive(i)}
-                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                    active === i ? 'bg-gold w-5' : 'bg-gold/25'
-                  }`}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${active === i ? 'bg-gold w-5' : 'bg-gold/25 w-1.5'}`}
                 />
               ))}
             </div>
@@ -206,9 +185,9 @@ export default function NewsSection() {
 
           {/* Countdown */}
           <motion.div
+            ref={rightRef}
             initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            animate={rightInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
             transition={{ duration: 0.8, delay: 0.1 }}
             className="flex flex-col justify-center"
           >
@@ -219,7 +198,6 @@ export default function NewsSection() {
             </h3>
 
             <div className="relative border border-gold/20 bg-shadow-mid p-8">
-              {/* Corner ornaments */}
               <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-gold/60" />
               <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-gold/60" />
               <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-gold/60" />

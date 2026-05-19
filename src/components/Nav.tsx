@@ -6,10 +6,10 @@ import Link from 'next/link'
 
 const links = [
   { label: 'Home', href: '/' },
-  { label: 'Play Now', href: '#play' },
-  { label: 'Store', href: 'https://store.wotrmc.com' },
-  { label: 'Info', href: '#info' },
-  { label: 'Discord', href: 'https://discord.gg/wotrmc', highlight: true },
+  { label: 'Play Now', href: '/playnow' },
+  { label: 'Store', href: '/store' },
+  { label: 'Info', href: '/info' },
+  { label: 'Discord', href: 'https://discord.gg/wotrmc', highlight: true, external: true },
 ]
 
 export default function Nav() {
@@ -34,7 +34,6 @@ export default function Nav() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
         <Link href="/" className="group flex items-center gap-3">
           <div className="w-8 h-8 border border-gold/40 group-hover:border-gold flex items-center justify-center transition-all duration-300">
             <span className="font-cinzel-decorative text-gold text-sm font-bold">W</span>
@@ -49,7 +48,6 @@ export default function Nav() {
           </div>
         </Link>
 
-        {/* Desktop links */}
         <div className="hidden md:flex items-center gap-7">
           {links.map((link) =>
             link.highlight ? (
@@ -63,43 +61,29 @@ export default function Nav() {
                 {link.label}
               </a>
             ) : (
-              <a
+              <Link
                 key={link.label}
                 href={link.href}
                 className="font-cinzel text-[11px] uppercase tracking-[0.2em] text-parchment/60 hover:text-gold transition-colors duration-300 relative group"
               >
                 {link.label}
                 <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-gold group-hover:w-full transition-all duration-300" />
-              </a>
+              </Link>
             )
           )}
         </div>
 
-        {/* Mobile hamburger */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden flex flex-col gap-[5px] p-2 relative z-50"
           aria-label="Toggle menu"
         >
-          <motion.span
-            animate={menuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-            transition={{ duration: 0.25 }}
-            className="w-5 h-px bg-gold block"
-          />
-          <motion.span
-            animate={menuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-            transition={{ duration: 0.2 }}
-            className="w-5 h-px bg-gold block"
-          />
-          <motion.span
-            animate={menuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-            transition={{ duration: 0.25 }}
-            className="w-5 h-px bg-gold block"
-          />
+          <motion.span animate={menuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }} transition={{ duration: 0.25 }} className="w-5 h-px bg-gold block" />
+          <motion.span animate={menuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }} transition={{ duration: 0.2 }} className="w-5 h-px bg-gold block" />
+          <motion.span animate={menuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }} transition={{ duration: 0.25 }} className="w-5 h-px bg-gold block" />
         </button>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -111,14 +95,14 @@ export default function Nav() {
           >
             <div className="px-6 py-5 flex flex-col gap-5">
               {links.map((link) => (
-                <a
+                <Link
                   key={link.label}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
                   className="font-cinzel text-xs uppercase tracking-[0.2em] text-parchment/70 hover:text-gold transition-colors duration-300"
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
             </div>
           </motion.div>

@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
+import FadeIn from './FadeIn'
 
 const FACTIONS = [
   {
@@ -40,24 +41,22 @@ const FACTIONS = [
 
 export default function FactionCards() {
   const [hovered, setHovered] = useState<string | null>(null)
+  const card1Ref = useRef<HTMLDivElement>(null)
+  const card2Ref = useRef<HTMLDivElement>(null)
+  const card1InView = useInView(card1Ref, { once: true, amount: 0 })
+  const card2InView = useInView(card2Ref, { once: true, amount: 0 })
+  const inViews = [card1InView, card2InView]
+  const cardRefs = [card1Ref, card2Ref]
 
   return (
     <section className="relative py-24 overflow-hidden">
-      {/* Background */}
       <div
         className="absolute inset-0"
         style={{ background: 'linear-gradient(to bottom, #0a0806, #0e0c08, #0a0806)' }}
       />
 
       <div className="relative max-w-6xl mx-auto px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
+        <FadeIn className="text-center mb-16">
           <p className="font-cinzel text-gold/50 text-[11px] tracking-[0.35em] uppercase mb-3">
             Choose Your Allegiance
           </p>
@@ -68,15 +67,15 @@ export default function FactionCards() {
             className="mt-5 mx-auto w-48 h-px"
             style={{ background: 'linear-gradient(to right, transparent, #c9a84c55, transparent)' }}
           />
-        </motion.div>
+        </FadeIn>
 
         <div className="grid md:grid-cols-2 gap-6">
           {FACTIONS.map((faction, i) => (
             <motion.div
               key={faction.id}
+              ref={cardRefs[i]}
               initial={{ opacity: 0, x: i === 0 ? -40 : 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              animate={inViews[i] ? { opacity: 1, x: 0 } : { opacity: 0, x: i === 0 ? -40 : 40 }}
               transition={{ duration: 0.9, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
               onHoverStart={() => setHovered(faction.id)}
               onHoverEnd={() => setHovered(null)}
@@ -86,42 +85,31 @@ export default function FactionCards() {
                 transition: 'border-color 0.4s ease',
               }}
             >
-              {/* Card bg */}
-              <div
-                className="absolute inset-0 transition-opacity duration-500"
-                style={{ background: faction.gradient }}
-              />
-
-              {/* Hover glow overlay */}
+              <div className="absolute inset-0 transition-opacity duration-500" style={{ background: faction.gradient }} />
               <motion.div
                 animate={{ opacity: hovered === faction.id ? 1 : 0 }}
                 transition={{ duration: 0.4 }}
                 className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: `radial-gradient(ellipse at 50% 0%, ${faction.accentDim} 0%, transparent 70%)`,
-                }}
+                style={{ background: `radial-gradient(ellipse at 50% 0%, ${faction.accentDim} 0%, transparent 70%)` }}
               />
 
-              {/* Corner ornaments */}
-              <div
-                className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 transition-all duration-300"
-                style={{ borderColor: hovered === faction.id ? faction.accent : faction.borderBase }}
-              />
-              <div
-                className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 transition-all duration-300"
-                style={{ borderColor: hovered === faction.id ? faction.accent : faction.borderBase }}
-              />
-              <div
-                className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 transition-all duration-300"
-                style={{ borderColor: hovered === faction.id ? faction.accent : faction.borderBase }}
-              />
-              <div
-                className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 transition-all duration-300"
-                style={{ borderColor: hovered === faction.id ? faction.accent : faction.borderBase }}
-              />
+              {[
+                'absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2',
+                'absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2',
+                'absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2',
+                'absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2',
+              ].map((cls, j) => (
+                <div
+                  key={j}
+                  className={cls}
+                  style={{
+                    borderColor: hovered === faction.id ? faction.accent : faction.borderBase,
+                    transition: 'border-color 0.3s ease',
+                  }}
+                />
+              ))}
 
               <div className="relative p-8">
-                {/* Header row */}
                 <div className="flex items-start justify-between mb-6">
                   <div>
                     <motion.div
@@ -131,51 +119,33 @@ export default function FactionCards() {
                     >
                       {faction.icon}
                     </motion.div>
-                    <h3
-                      className="font-cinzel-decorative text-2xl md:text-3xl font-bold"
-                      style={{ color: faction.accent }}
-                    >
+                    <h3 className="font-cinzel-decorative text-2xl md:text-3xl font-bold" style={{ color: faction.accent }}>
                       {faction.name}
                     </h3>
-                    <p className="font-garamond italic text-parchment/40 text-sm mt-1">
-                      {faction.tagline}
-                    </p>
+                    <p className="font-garamond italic text-parchment/40 text-sm mt-1">{faction.tagline}</p>
                   </div>
                   <div className="text-right shrink-0 ml-4">
-                    <div
-                      className="font-cinzel-decorative text-2xl font-bold"
-                      style={{ color: faction.accent }}
-                    >
+                    <div className="font-cinzel-decorative text-2xl font-bold" style={{ color: faction.accent }}>
                       {faction.players}
                     </div>
-                    <div className="font-cinzel text-[9px] text-parchment/30 uppercase tracking-wider">
-                      Warriors
-                    </div>
+                    <div className="font-cinzel text-[9px] text-parchment/30 uppercase tracking-wider">Warriors</div>
                   </div>
                 </div>
 
-                {/* Lore */}
-                <p className="font-garamond text-parchment/60 mb-6 leading-relaxed text-[15px]">
-                  {faction.lore}
-                </p>
+                <p className="font-garamond text-parchment/60 mb-6 leading-relaxed text-[15px]">{faction.lore}</p>
 
-                {/* Race badges */}
                 <div className="flex flex-wrap gap-2 mb-8">
                   {faction.races.map((race) => (
-                    <span
-                      key={race}
-                      className={`font-cinzel text-[9px] px-3 py-1 border uppercase tracking-wider ${faction.badgeClass}`}
-                    >
+                    <span key={race} className={`font-cinzel text-[9px] px-3 py-1 border uppercase tracking-wider ${faction.badgeClass}`}>
                       {race}
                     </span>
                   ))}
                 </div>
 
-                {/* CTA */}
                 <motion.a
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  href="https://www.wotrmc.com/play"
+                  href="/playnow"
                   className={`block w-full text-center ${faction.btnClass} text-parchment font-cinzel text-[11px] py-3.5 uppercase tracking-[0.25em] transition-colors duration-300`}
                 >
                   Pledge to {faction.name.split(' ').pop()}
@@ -185,7 +155,6 @@ export default function FactionCards() {
           ))}
         </div>
 
-        {/* VS divider */}
         <div className="flex items-center justify-center -mt-3 relative z-10">
           <div
             className="w-12 h-12 flex items-center justify-center border border-gold/30 bg-shadow"

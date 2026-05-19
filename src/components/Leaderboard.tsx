@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { useRef } from 'react'
+import FadeIn from './FadeIn'
 
 type Tab = 'warriors' | 'factions'
 
@@ -27,42 +29,46 @@ const FACTIONS = [
 const RANK_COLOR = ['text-yellow-400', 'text-slate-300', 'text-amber-600']
 const RANK_ICON = ['👑', '🥈', '🥉']
 
+function TableRow({ children, index }: { children: React.ReactNode; index: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, amount: 0 })
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: -16 }}
+      animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -16 }}
+      transition={{ delay: index * 0.04, duration: 0.5 }}
+      className="grid grid-cols-6 gap-4 px-5 py-4 border-b border-gold/5 last:border-0 hover:bg-gold/[0.03] transition-colors duration-200"
+    >
+      {children}
+    </motion.div>
+  )
+}
+
 export default function Leaderboard() {
   const [tab, setTab] = useState<Tab>('warriors')
 
   return (
     <section className="relative py-24 bg-shadow overflow-hidden">
       <div className="max-w-5xl mx-auto px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-12"
-        >
+        <FadeIn className="text-center mb-12">
           <p className="font-cinzel text-gold/50 text-[11px] tracking-[0.35em] uppercase mb-3">
             Hall of Valor
           </p>
-          <h2 className="font-cinzel-decorative text-4xl md:text-5xl text-parchment">
-            Leaderboard
-          </h2>
+          <h2 className="font-cinzel-decorative text-4xl md:text-5xl text-parchment">Leaderboard</h2>
           <div
             className="mt-5 mx-auto w-48 h-px"
             style={{ background: 'linear-gradient(to right, transparent, #c9a84c55, transparent)' }}
           />
-        </motion.div>
+        </FadeIn>
 
-        {/* Tab switcher */}
         <div className="flex gap-0 mb-8 border border-gold/20 w-fit mx-auto">
           {(['warriors', 'factions'] as Tab[]).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`relative font-cinzel text-[11px] uppercase tracking-[0.2em] px-8 py-3 transition-colors duration-300 ${
-                tab === t
-                  ? 'bg-gold text-shadow font-bold'
-                  : 'text-parchment/50 hover:text-parchment'
+              className={`font-cinzel text-[11px] uppercase tracking-[0.2em] px-8 py-3 transition-colors duration-300 ${
+                tab === t ? 'bg-gold text-shadow font-bold' : 'text-parchment/50 hover:text-parchment'
               }`}
             >
               {t === 'warriors' ? 'Warriors' : 'Factions'}
@@ -70,7 +76,6 @@ export default function Leaderboard() {
           ))}
         </div>
 
-        {/* Table */}
         <AnimatePresence mode="wait">
           {tab === 'warriors' ? (
             <motion.div
@@ -81,27 +86,15 @@ export default function Leaderboard() {
               transition={{ duration: 0.3 }}
               className="border border-gold/15 overflow-hidden"
             >
-              {/* Header */}
               <div className="grid grid-cols-6 gap-4 px-5 py-3 bg-shadow-mid border-b border-gold/10">
                 {['Rank', 'Warrior', 'Faction', 'Kills', 'Deaths', 'Score'].map((h) => (
-                  <div
-                    key={h}
-                    className="font-cinzel text-[9px] text-gold/40 uppercase tracking-[0.2em] text-center first:text-left"
-                  >
+                  <div key={h} className="font-cinzel text-[9px] text-gold/40 uppercase tracking-[0.2em] text-center first:text-left">
                     {h}
                   </div>
                 ))}
               </div>
-
               {PLAYERS.map((p, i) => (
-                <motion.div
-                  key={p.name}
-                  initial={{ opacity: 0, x: -16 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.04 }}
-                  className="grid grid-cols-6 gap-4 px-5 py-4 border-b border-gold/5 last:border-0 hover:bg-gold/[0.03] transition-colors duration-200"
-                >
+                <TableRow key={p.name} index={i}>
                   <div className={`font-cinzel-decorative text-base font-bold ${RANK_COLOR[i] ?? 'text-parchment/30'}`}>
                     {i < 3 ? RANK_ICON[i] : `#${p.rank}`}
                   </div>
@@ -112,7 +105,7 @@ export default function Leaderboard() {
                   <div className="font-cinzel text-sm text-center text-ember">{p.kills.toLocaleString()}</div>
                   <div className="font-cinzel text-sm text-center text-parchment/30">{p.deaths.toLocaleString()}</div>
                   <div className="font-cinzel text-sm text-center text-gold">{p.score.toLocaleString()}</div>
-                </motion.div>
+                </TableRow>
               ))}
             </motion.div>
           ) : (
@@ -126,24 +119,13 @@ export default function Leaderboard() {
             >
               <div className="grid grid-cols-6 gap-4 px-5 py-3 bg-shadow-mid border-b border-gold/10">
                 {['Rank', 'Faction', 'Side', 'Members', 'Territories', 'Wins'].map((h) => (
-                  <div
-                    key={h}
-                    className="font-cinzel text-[9px] text-gold/40 uppercase tracking-[0.2em] text-center first:text-left"
-                  >
+                  <div key={h} className="font-cinzel text-[9px] text-gold/40 uppercase tracking-[0.2em] text-center first:text-left">
                     {h}
                   </div>
                 ))}
               </div>
-
               {FACTIONS.map((f, i) => (
-                <motion.div
-                  key={f.name}
-                  initial={{ opacity: 0, x: -16 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.04 }}
-                  className="grid grid-cols-6 gap-4 px-5 py-4 border-b border-gold/5 last:border-0 hover:bg-gold/[0.03] transition-colors duration-200"
-                >
+                <TableRow key={f.name} index={i}>
                   <div className={`font-cinzel-decorative text-base font-bold ${RANK_COLOR[i] ?? 'text-parchment/30'}`}>
                     {i < 3 ? RANK_ICON[i] : `#${f.rank}`}
                   </div>
@@ -154,7 +136,7 @@ export default function Leaderboard() {
                   <div className="font-cinzel text-sm text-center text-parchment/60">{f.members}</div>
                   <div className="font-cinzel text-sm text-center text-gold">{f.territories}</div>
                   <div className="font-cinzel text-sm text-center text-green-400">{f.wins}</div>
-                </motion.div>
+                </TableRow>
               ))}
             </motion.div>
           )}
