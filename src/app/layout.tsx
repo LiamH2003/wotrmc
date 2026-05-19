@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${cinzel.variable} ${cinzelDecorative.variable} ${ebGaramond.variable}`}
     >
-      <body className="bg-shadow text-parchment font-garamond antialiased">
+      <body suppressHydrationWarning className="bg-shadow text-parchment font-garamond antialiased">
         <Nav />
         {children}
         <FloatingDiscord />

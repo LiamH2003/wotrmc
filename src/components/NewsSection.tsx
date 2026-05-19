@@ -150,7 +150,7 @@ export default function NewsSection() {
                         {item.category}
                       </span>
                       <span className="font-cinzel text-[10px] text-parchment/30">
-                        {new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        {new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })}
                       </span>
                     </div>
                     <p className="font-cinzel text-[13px] text-parchment/80">{item.title}</p>

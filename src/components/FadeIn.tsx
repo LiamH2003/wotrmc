@@ -1,7 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 
 interface FadeInProps {
   children: React.ReactNode
@@ -21,18 +20,37 @@ export default function FadeIn({
   y = 24,
 }: FadeInProps) {
   const ref = useRef<HTMLDivElement>(null)
-  // once: true = isInView flips to true once and NEVER reverts — no re-hiding on scroll
-  const isInView = useInView(ref, { once: true, amount: 0 })
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true)
+          observer.unobserve(el)
+        }
+      },
+      { threshold: 0, rootMargin: '0px 0px 60px 0px' }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   return (
-    <motion.div
+    <div
       ref={ref}
       className={className}
-      initial={{ opacity: 0, x, y }}
-      animate={isInView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x, y }}
-      transition={{ delay, duration, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'none' : `translate(${x}px, ${y}px)`,
+        transition: `opacity ${duration}s ${delay}s cubic-bezier(0.22,1,0.36,1), transform ${duration}s ${delay}s cubic-bezier(0.22,1,0.36,1)`,
+      }}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }
