@@ -49,6 +49,55 @@ const NEWS: NewsItem[] = [
     title: 'New Faction: Dead Men of Dunharrow',
     body: 'Oath-sworn spectral warriors join the Free Peoples. Unique phasing abilities allow them to pass through Shadow fortifications.',
   },
+  {
+    id: 6,
+    date: '2026-05-04',
+    category: 'Battle',
+    title: 'Siege of Minas Morgul',
+    body: 'Shadow forces held the Morgul Vale against a sustained Free Peoples assault. The Nazgûl rallied the defence — the city stands.',
+  },
+  {
+    id: 7,
+    date: '2026-05-01',
+    category: 'Event',
+    title: 'The Shire Moot',
+    body: 'Hobbit players gathered in Michel Delving for the first inter-faction summit of the season. Trade agreements and non-aggression pacts signed.',
+  },
+  {
+    id: 8,
+    date: '2026-04-28',
+    category: 'Update',
+    title: "Shelob's Lair Dungeon Live",
+    body: "A new dungeon deep in Cirith Ungol — bring torches and a full party. Rare Elven thread and the Phial of Galadriel await those who survive.",
+  },
+  {
+    id: 9,
+    date: '2026-04-24',
+    category: 'Battle',
+    title: 'Rohirrim Ride at Dawn',
+    body: 'A combined Rohan–Gondor cavalry charge broke the Shadow siege at Pelargir. 120 players participated — the largest land battle of Season III.',
+  },
+  {
+    id: 10,
+    date: '2026-04-20',
+    category: 'Lore',
+    title: 'The One Ring Changes Hands',
+    body: 'After weeks of pursuit across Rhûn, the One Ring quest item was seized by a lone Orc scout. The Eye now turns toward Rivendell.',
+  },
+  {
+    id: 11,
+    date: '2026-04-17',
+    category: 'Update',
+    title: 'Renown System Overhaul',
+    body: 'Daily login streaks now grant bonus Renown. New tier — Loremaster — unlocked at 5,000 Renown with access to three exclusive titles.',
+  },
+  {
+    id: 12,
+    date: '2026-04-13',
+    category: 'Event',
+    title: 'Festival of Durin\'s Day',
+    body: 'Dwarven players celebrated Durin\'s Day with a server-wide mining event. Top contributors earned the Stonecrown title and Mithril ingots.',
+  },
 ]
 
 const CATEGORY_STYLE: Record<NewsItem['category'], string> = {
@@ -87,11 +136,6 @@ export default function NewsSection() {
 
   const [leftRef, leftInView] = useInViewNative<HTMLDivElement>()
   const [rightRef, rightInView] = useInViewNative<HTMLDivElement>()
-
-  useEffect(() => {
-    const id = setInterval(() => setActive((prev) => (prev + 1) % NEWS.length), 6000)
-    return () => clearInterval(id)
-  }, [])
 
   return (
     <section className="relative py-24 bg-shadow overflow-hidden">
@@ -149,8 +193,11 @@ export default function NewsSection() {
                 style={{ background: 'linear-gradient(to right, rgba(201,168,76,0.3), transparent)' }}
               />
 
-              {/* News items */}
-              <div className="space-y-px flex-1">
+              {/* News items — fixed height, internal scroll */}
+              <div
+                className="overflow-y-auto space-y-px pr-1"
+                style={{ height: '320px', scrollbarWidth: 'thin', scrollbarColor: 'rgba(201,168,76,0.25) transparent' }}
+              >
                 {NEWS.map((item, i) => (
                   <div key={item.id} onClick={() => setActive(i)} className="cursor-pointer">
                     <motion.div
@@ -188,15 +235,11 @@ export default function NewsSection() {
                 ))}
               </div>
 
-              {/* Pagination dots */}
-              <div className="flex gap-2 mt-6 pt-4 border-t border-gold/10 justify-center">
-                {NEWS.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActive(i)}
-                    className={`h-1 rounded-full transition-all duration-300 ${active === i ? 'bg-gold w-6' : 'bg-gold/20 w-2'}`}
-                  />
-                ))}
+              {/* Scroll hint */}
+              <div className="mt-4 pt-4 border-t border-gold/10 flex items-center justify-center gap-2">
+                <div className="h-px flex-1 bg-gold/10" />
+                <p className="font-cinzel text-[8px] text-gold/30 uppercase tracking-[0.25em]">Scroll for more</p>
+                <div className="h-px flex-1 bg-gold/10" />
               </div>
             </div>
           </div>
