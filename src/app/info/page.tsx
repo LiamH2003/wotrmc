@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { CrossedSwords, TreasureMap, Crown, ScrollUnfurled, LinkedRings, FireRing } from 'react-game-icons'
+import { Swords, Map, Crown, ScrollText, Link2, CircleDot } from 'lucide-react'
 import GameIcon from '@/components/GameIcon'
 import PageHero from '@/components/PageHero'
 import FadeIn from '@/components/FadeIn'
@@ -25,12 +25,12 @@ const FAMOUS_BUILDS = [
 ]
 
 const ACTIVITIES = [
-  { icon: CrossedSwords, title: 'Siege Warfare', desc: 'Organize your faction, raise Troops, and launch coordinated sieges against rival Seats.' },
-  { icon: TreasureMap, title: 'Dungeon Exploration', desc: 'Venture into hidden dungeons to find Artifacts, Legendary Weapons, and the Rings of Power.' },
+  { icon: Swords, title: 'Siege Warfare', desc: 'Organize your faction, raise Troops, and launch coordinated sieges against rival Seats.' },
+  { icon: Map, title: 'Dungeon Exploration', desc: 'Venture into hidden dungeons to find Artifacts, Legendary Weapons, and the Rings of Power.' },
   { icon: Crown, title: 'Kingdom Building', desc: 'Found a Seat, recruit residents, and build your own corner of Middle Earth.' },
-  { icon: ScrollUnfurled, title: 'Quest System', desc: 'Complete lore-driven quests that earn Renown and unlock exclusive titles and roles.' },
-  { icon: LinkedRings, title: 'Political Alliances', desc: 'Forge treaties, declare war, and navigate the shifting politics of Middle Earth.' },
-  { icon: FireRing, title: 'One Ring Quest', desc: 'A special server-wide quest chain tied to the fate of the One Ring itself.' },
+  { icon: ScrollText, title: 'Quest System', desc: 'Complete lore-driven quests that earn Renown and unlock exclusive titles and roles.' },
+  { icon: Link2, title: 'Political Alliances', desc: 'Forge treaties, declare war, and navigate the shifting politics of Middle Earth.' },
+  { icon: CircleDot, title: 'One Ring Quest', desc: 'A special server-wide quest chain tied to the fate of the One Ring itself.' },
 ]
 
 const FAQ = [

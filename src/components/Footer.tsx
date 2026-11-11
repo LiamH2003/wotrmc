@@ -98,7 +98,7 @@ export default function Footer() {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="font-cinzel text-[10px] text-parchment/20 uppercase tracking-widest text-center">
-            © 2026 War of the Ring MC — Not affiliated with New Line Cinema or the Tolkien Estate
+            © 2026 War of the Ring MC. Not affiliated with New Line Cinema or the Tolkien Estate
           </p>
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />

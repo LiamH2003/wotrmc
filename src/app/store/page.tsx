@@ -1,17 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { RallyTheTroops, Shield, WhiteTower, OpenTreasureChest } from 'react-game-icons'
+import { UsersRound, Shield, Castle, PackageOpen } from 'lucide-react'
 import GameIcon from '@/components/GameIcon'
 import PageHero from '@/components/PageHero'
 import FadeIn from '@/components/FadeIn'
 import Footer from '@/components/Footer'
 
 const FEATURES = [
-  { icon: RallyTheTroops, title: 'Community Benefit', body: 'Every donation unlocks perks for the entire server within 24 hours — not just the buyer.' },
+  { icon: UsersRound, title: 'Community Benefit', body: 'Every donation unlocks perks for the entire server within 24 hours — not just the buyer.' },
   { icon: Shield, title: 'Non Pay-to-Win', body: 'No gear, weapons, or combat advantages are sold. Purchases are purely cosmetic or quality-of-life.' },
-  { icon: WhiteTower, title: 'Funds the Server', body: 'Your support keeps Middle Earth online, funds new builds, and enables future seasons.' },
-  { icon: OpenTreasureChest, title: 'PrimaPacks', body: 'Special donation tiers that trigger server-wide bonuses like XP boosts, events, and loot drops.' },
+  { icon: Castle, title: 'Funds the Server', body: 'Your support keeps Middle Earth online, funds new builds, and enables future seasons.' },
+  { icon: PackageOpen, title: 'PrimaPacks', body: 'Special donation tiers that trigger server-wide bonuses like XP boosts, events, and loot drops.' },
 ]
 
 export default function StorePage() {

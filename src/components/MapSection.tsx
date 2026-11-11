@@ -33,7 +33,7 @@ export default function MapSection() {
             Middle Earth
           </h2>
           <p className="font-garamond italic text-parchment/40 mt-3 text-lg">
-            1,638,400 m² of hand-crafted world — every region a battlefield.
+            1,638,400 m² of hand-crafted world. Every region a battlefield.
           </p>
           <div
             className="mt-5 mx-auto w-48 h-px"
@@ -176,7 +176,7 @@ export default function MapSection() {
                 <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-gold/40" />
                 <p className="font-cinzel text-[11px] text-gold/50 uppercase tracking-[0.2em] mb-2">Live Map</p>
                 <p className="font-garamond text-parchment/50 text-sm leading-relaxed mb-4">
-                  Watch battles unfold across the realm in real time. Every Seat, every siege — visible from above.
+                  Watch battles unfold across the realm in real time. Every Seat. Every siege. Visible from above.
                 </p>
                 <a
                   href="https://map.wotrmc.com"

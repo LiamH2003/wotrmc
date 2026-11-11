@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { BorderedShield, BattleAxe, Campfire } from 'react-game-icons'
+import { Shield, Axe, Flame } from 'lucide-react'
 import GameIcon from '@/components/GameIcon'
 import PageHero from '@/components/PageHero'
 import FadeIn from '@/components/FadeIn'
@@ -10,231 +9,164 @@ import Footer from '@/components/Footer'
 
 const PACKS = [
   {
-    name: 'Lite Pack',
-    version: 'v1.3.6.1',
-    description: 'Core mods plus weather and building features (Chisel 2.0, Carpenter). Lower system requirements.',
+    name: 'Standard Pack',
+    version: 'v1.3.7.13',
+    description: 'A balanced selection of core mods for the classic War of the Ring experience, stable and compatible for most players.',
     tag: 'Recommended',
     tagColor: 'bg-gold text-shadow',
-    servers: ['Conquest of Arda', 'Middle-Earth: Reborn'],
-    icon: BorderedShield,
+    servers: ['Conquest of Arda'],
+    icon: Shield,
   },
   {
     name: 'Heavy Pack',
-    version: 'v1.3.6.1',
-    description: 'Full-featured pack for high-end systems. Enhanced visuals and additional mods.',
+    version: 'v1.3.7.13',
+    description: 'Feature-rich build with extra visual and QoL mods (for example: Not Enough Items) for a fuller singleplayer and creative experience.',
     tag: 'High-End',
     tagColor: 'bg-blue-700 text-parchment',
-    servers: ['Conquest of Arda', 'Middle-Earth: Reborn'],
-    icon: BattleAxe,
+    servers: ['Conquest of Arda'],
+    icon: Axe,
   },
   {
-    name: 'Reborn Pack',
-    version: 'v1.1.5.8',
-    description: 'Stripped-down pack optimised for multiplayer. Minimal lag, single server only.',
-    tag: 'Low Lag',
+    name: 'Season 4 (Experimental)',
+    version: 'v3 - EXP 2',
+    description: 'The latest Season 4 updates and features under active testing. Expect instability. Use this pack to help test and provide feedback.',
+    tag: 'Experimental',
     tagColor: 'bg-emerald-800 text-parchment',
-    servers: ['Middle-Earth: Reborn'],
-    icon: Campfire,
+    servers: ['Conquest of Arda'],
+    icon: Flame,
   },
 ]
 
 const STEPS = [
-  { n: '01', title: 'Download Technic Launcher', body: 'Visit technicpack.net and download the launcher for your OS. It handles all mod installs automatically.' },
-  { n: '02', title: 'Search for the Modpack', body: 'Open Technic, click "Modpacks" and search for "War of the Ring MC". Select the pack that matches your system.' },
-  { n: '03', title: 'Install & Launch', body: 'Click Install, wait for it to download, then hit Play. The launcher manages all updates.' },
-  { n: '04', title: 'Connect to the Server', body: 'In Minecraft, go to Multiplayer → Add Server and enter the IP below. Select your server and play.' },
+  {
+    n: '01',
+    title: 'Download Technic Launcher',
+    body: 'Go to technicpack.net/download and install the Technic Launcher for your operating system.',
+  },
+  {
+    n: '02',
+    title: 'Sign in to Technic',
+    body: 'Open the launcher and log in with your Minecraft account so the pack can launch correctly.',
+  },
+  {
+    n: '03',
+    title: 'Find War of the Ring MC',
+    body: 'In the Modpacks tab, search "War of the Ring MC" and pick the official pack for your playstyle.',
+  },
+  {
+    n: '04',
+    title: 'Install the pack',
+    body: 'Click Install and wait while Technic downloads and prepares the modpack for first use.',
+  },
+  {
+    n: '05',
+    title: 'Allocate RAM',
+    body: 'Open the pack settings and assign at least 6 GB of RAM. 8 GB is recommended for the best performance.',
+  },
+  {
+    n: '06',
+    title: 'Launch and join',
+    body: 'You can join the server from the main menu by selecting "Join Conquest of Arda", or play singleplayer to test locally before connecting.',
+  },
 ]
 
 export default function PlayNowPage() {
-  const [copied, setCopied] = useState(false)
-  const ip = 'wotrmc-world1.com'
-
-  const copyIP = () => {
-    navigator.clipboard.writeText(ip).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    })
-  }
-
   return (
     <main>
       <PageHero
-        eyebrow="Join the War"
-        title="Begin Your Journey"
-        subtitle="Follow these steps to enter Middle Earth and take your place in the war."
+        eyebrow="Play Now"
+        title="Download, Install, and Join"
+        subtitle="Use Technic Launcher to get the War of the Ring MC modpack installed, then enter Middle Earth with a single click."
+        backgroundSrc="/fortress.webp"
+        centerContent
+        showParticles
       />
 
-      {/* Server IP */}
-      <section className="relative py-16 bg-shadow-mid border-y border-gold/10">
-        <div className="max-w-2xl mx-auto px-6 text-center">
-          <FadeIn>
-            <p className="font-cinzel text-[11px] text-gold/50 tracking-[0.3em] uppercase mb-4">Server Address</p>
-            <div
-              className="relative border border-gold/30 bg-shadow inline-flex items-center gap-4 px-8 py-5 cursor-pointer group hover:border-gold/60 transition-all duration-300"
-              onClick={copyIP}
-              style={{ boxShadow: '0 0 30px rgba(201,168,76,0.06)' }}
-            >
-              <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-gold/60" />
-              <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-gold/60" />
-              <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-gold/60" />
-              <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-gold/60" />
-
-              <span className="font-cinzel-decorative text-2xl md:text-3xl text-gold tracking-wider select-all">
-                {ip}
-              </span>
-
-              <motion.div
-                animate={copied ? { scale: [1, 1.2, 1] } : {}}
-                className="ml-2"
-              >
-                {copied ? (
-                  <span className="font-cinzel text-[10px] text-green-400 uppercase tracking-wider">Copied!</span>
-                ) : (
-                  <span className="font-cinzel text-[10px] text-gold/40 group-hover:text-gold/70 uppercase tracking-wider transition-colors">
-                    Click to copy
-                  </span>
-                )}
-              </motion.div>
-            </div>
-
-            <p className="font-cinzel text-[10px] text-parchment/30 uppercase tracking-wider mt-4">
-              Minecraft 1.7.10 · Forge Required
-            </p>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Installation steps */}
       <section className="relative py-24 bg-shadow">
-        <div className="max-w-5xl mx-auto px-6">
+        <div className="max-w-6xl mx-auto px-6">
           <FadeIn className="text-center mb-16">
-            <p className="font-cinzel text-gold/50 text-[11px] tracking-[0.35em] uppercase mb-3">
-              Method 1 · Recommended
-            </p>
-            <h2 className="font-cinzel-decorative text-4xl md:text-5xl text-parchment">
-              Technic Launcher
-            </h2>
-            <p className="font-garamond italic text-parchment/40 mt-3 text-lg">
-              Automatic updates. Easiest setup. No manual file management.
-            </p>
-            <div className="mt-5 mx-auto w-48 h-px" style={{ background: 'linear-gradient(to right, transparent, #c9a84c55, transparent)' }} />
+            <p className="font-cinzel text-gold/50 text-[11px] tracking-[0.35em] uppercase mb-3">Quick Start</p>
+            <h2 className="font-cinzel-decorative text-4xl md:text-5xl text-parchment">Technic Launcher Process</h2>
+            <p className="font-garamond italic text-parchment/40 mt-3 text-lg">Follow these six steps to download the launcher, install the pack, and launch your first session.</p>
           </FadeIn>
 
-          <div className="grid md:grid-cols-2 gap-5">
-            {STEPS.map((step, i) => (
-              <FadeIn key={step.n} delay={i * 0.08} y={20}>
-                <div
-                  className="relative border border-gold/15 bg-shadow-mid p-6 hover:border-gold/30 transition-colors duration-300"
-                  style={{ boxShadow: '0 0 20px rgba(201,168,76,0.03)' }}
-                >
+          <div className="grid gap-5 sm:grid-cols-2 auto-rows-fr">
+            {STEPS.map((step, index) => (
+              <FadeIn key={step.n} delay={index * 0.07} y={20}>
+                <article className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-gold/15 bg-shadow-mid p-6 shadow-[0_0_40px_rgba(201,168,76,0.04)] transition-all duration-300 hover:border-gold/30">
                   <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-gold/40" />
                   <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-gold/40" />
 
-                  <div className="flex items-start gap-4">
-                    <span className="font-cinzel-decorative text-3xl text-gold/20 font-bold leading-none shrink-0">
-                      {step.n}
-                    </span>
-                    <div>
-                      <h3 className="font-cinzel text-sm text-parchment mb-2 uppercase tracking-wider">{step.title}</h3>
-                      <p className="font-garamond text-parchment/50 text-[15px] leading-relaxed">{step.body}</p>
+                  <div className="flex items-start gap-4 mb-4">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gold/10 text-gold font-cinzel text-lg font-bold">{step.n}</span>
+                    <div className="flex-1">
+                      <h3 className="font-cinzel text-base text-parchment uppercase tracking-[0.2em] mb-2">{step.title}</h3>
+                      <p className="font-garamond text-parchment/55 leading-relaxed text-sm">{step.body}</p>
                     </div>
                   </div>
-                </div>
+                </article>
               </FadeIn>
             ))}
           </div>
 
-          <FadeIn className="text-center mt-10" delay={0.3}>
+          <FadeIn className="text-center mt-12" delay={0.2}>
             <motion.a
-              whileHover={{ scale: 1.04 }}
+              whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               href="https://www.technicpack.net/download"
               target="_blank"
               rel="noopener noreferrer"
-              className="clip-skew inline-block px-10 py-4 bg-gold hover:bg-gold-light font-cinzel font-bold text-shadow text-sm uppercase tracking-[0.2em] transition-colors duration-300"
+              className="clip-skew inline-flex items-center justify-center px-10 py-4 bg-gold hover:bg-gold-light font-cinzel font-bold text-shadow text-sm uppercase tracking-[0.2em] transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold/70"
             >
-              Download Technic Launcher
+              <span>Download Technic Launcher</span>
+              <svg className="ml-3 h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12h14" stroke="#0a0806" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M13 6l6 6-6 6" stroke="#0a0806" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </motion.a>
           </FadeIn>
         </div>
       </section>
 
-      {/* Pack selector */}
       <section className="relative py-24 bg-shadow-mid">
-        <div
-          className="absolute top-0 left-0 right-0 h-px"
-          style={{ background: 'linear-gradient(to right, transparent, #c9a84c22, transparent)' }}
-        />
-        <div className="max-w-5xl mx-auto px-6">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+        <div className="max-w-6xl mx-auto px-6">
           <FadeIn className="text-center mb-16">
-            <p className="font-cinzel text-gold/50 text-[11px] tracking-[0.35em] uppercase mb-3">Choose Your Pack</p>
-            <h2 className="font-cinzel-decorative text-4xl md:text-5xl text-parchment">Modpack Options</h2>
-            <div className="mt-5 mx-auto w-48 h-px" style={{ background: 'linear-gradient(to right, transparent, #c9a84c55, transparent)' }} />
+            <p className="font-cinzel text-gold/50 text-[11px] uppercase tracking-[0.35em] mb-3">Choose Your Pack</p>
+            <h2 className="font-cinzel-decorative text-4xl md:text-5xl text-parchment">Pick the Build That Fits You</h2>
+            <p className="font-garamond italic text-parchment/40 mt-3 text-lg">Choose a stable, feature-rich, or experimental pack depending on your system and whether you'd like to help test Season 4 updates.</p>
           </FadeIn>
 
-          <div className="grid md:grid-cols-3 gap-5">
-            {PACKS.map((pack, i) => (
-              <FadeIn key={pack.name} delay={i * 0.1} y={24}>
-                <div className="relative border border-gold/15 bg-shadow p-6 h-full flex flex-col hover:border-gold/30 transition-colors duration-300">
+          <div className="grid gap-5 lg:grid-cols-3">
+            {PACKS.map((pack, index) => (
+              <FadeIn key={pack.name} delay={index * 0.08} y={24}>
+                <article className="relative rounded-3xl border border-gold/15 bg-shadow p-6 h-full hover:border-gold/30 transition-all duration-300">
                   <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-gold/40" />
                   <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-gold/40" />
                   <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-gold/40" />
                   <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-gold/40" />
 
-                  <div className="flex items-start justify-between mb-4">
-                    <GameIcon icon={pack.icon} />
-                    <span className={`font-cinzel text-[9px] px-2 py-1 uppercase tracking-wider ${pack.tagColor}`}>
-                      {pack.tag}
-                    </span>
+                  <div className="flex items-center justify-between mb-5 gap-4">
+                    <GameIcon icon={pack.icon} size={36} />
+                    <span className={`font-cinzel text-[9px] px-2 py-1 uppercase tracking-[0.2em] ${pack.tagColor}`}>{pack.tag}</span>
                   </div>
 
-                  <h3 className="font-cinzel text-base text-parchment uppercase tracking-wider mb-1">{pack.name}</h3>
-                  <span className="font-cinzel text-[10px] text-gold/40 tracking-wider mb-3">{pack.version}</span>
-                  <p className="font-garamond text-parchment/50 text-sm leading-relaxed mb-5 flex-1">{pack.description}</p>
+                  <h3 className="font-cinzel text-xl text-parchment uppercase tracking-wider mb-2">{pack.name}</h3>
+                  <p className="font-cinzel text-[10px] text-gold/40 uppercase tracking-[0.25em] mb-4">{pack.version}</p>
+                  <p className="font-garamond text-parchment/55 leading-relaxed mb-6 text-sm">{pack.description}</p>
 
-                  <div>
-                    <p className="font-cinzel text-[9px] text-gold/40 uppercase tracking-wider mb-2">Compatible Servers</p>
-                    <div className="space-y-1">
-                      {pack.servers.map((s) => (
-                        <div key={s} className="flex items-center gap-2">
-                          <span className="w-1 h-1 rounded-full bg-gold/50" />
-                          <span className="font-cinzel text-[11px] text-parchment/60">{s}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="space-y-2">
+                    {pack.servers.map((server) => (
+                      <div key={server} className="flex items-center gap-2 text-parchment/70 text-sm font-cinzel">
+                        <span className="h-2 w-2 rounded-full bg-gold/60 block" />
+                        <span>{server}</span>
+                      </div>
+                    ))}
                   </div>
-                </div>
+                </article>
               </FadeIn>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Manual install fallback */}
-      <section className="relative py-20 bg-shadow">
-        <div className="max-w-3xl mx-auto px-6">
-          <FadeIn className="border border-gold/15 bg-shadow-mid p-8 text-center">
-            <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-gold/40" />
-            <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-gold/40" />
-            <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-gold/40" />
-            <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-gold/40" />
-
-            <h3 className="font-cinzel-decorative text-2xl text-parchment mb-3">Method 2 — Manual Install</h3>
-            <p className="font-garamond text-parchment/50 text-[15px] leading-relaxed mb-6">
-              Prefer manual control? Download Forge 1.7.10, then grab a pack from Dropbox and drop the mods into your
-              Minecraft folder. A step-by-step Forge tutorial is available on the server Discord.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <a
-                href="https://discord.gg/wotrmc"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-cinzel text-[11px] uppercase tracking-[0.2em] border border-gold/30 hover:border-gold text-parchment/70 hover:text-parchment px-6 py-3 transition-all duration-300"
-              >
-                Get Help on Discord
-              </a>
-            </div>
-          </FadeIn>
         </div>
       </section>
 

@@ -1,16 +1,32 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import EmberParticles from './EmberParticles'
 
 interface PageHeroProps {
   eyebrow: string
   title: string
   subtitle?: string
+  className?: string
+  backgroundSrc?: string
+  centerContent?: boolean
+  showParticles?: boolean
 }
 
-export default function PageHero({ eyebrow, title, subtitle }: PageHeroProps) {
+export default function PageHero({
+  eyebrow,
+  title,
+  subtitle,
+  className = '',
+  backgroundSrc,
+  centerContent = false,
+  showParticles = false,
+}: PageHeroProps) {
   return (
-    <section className="relative pt-36 pb-20 overflow-hidden bg-shadow">
+    <section
+      className={`relative overflow-hidden bg-shadow ${centerContent ? 'min-h-screen flex items-center justify-center' : 'pt-36 pb-20'} ${className}`}
+      style={backgroundSrc ? { backgroundImage: `url(${backgroundSrc})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+    >
       <div
         className="absolute inset-0 opacity-30"
         style={{ background: 'radial-gradient(ellipse at 50% 100%, rgba(201,168,76,0.12) 0%, transparent 70%)' }}
@@ -21,6 +37,8 @@ export default function PageHero({ eyebrow, title, subtitle }: PageHeroProps) {
           backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(201,168,76,0.8) 40px)`,
         }}
       />
+
+      {showParticles && <EmberParticles />}
 
       <div className="relative max-w-5xl mx-auto px-6 text-center">
         <motion.p

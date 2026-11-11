@@ -25,16 +25,15 @@ export default function EmberParticles() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const embers: Ember[] = []
+    let frame = 0
+    let animId: number | null = null
+
     const resize = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
     }
-    resize()
-    window.addEventListener('resize', resize, { passive: true })
-
-    const embers: Ember[] = []
-    let frame = 0
-    let animId: number
 
     const spawn = () => {
       embers.push({
@@ -51,10 +50,12 @@ export default function EmberParticles() {
     }
 
     const tick = () => {
+      animId = null
+      if (document.visibilityState === 'hidden' || motionPreference.matches) return
+
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Spawn rate: every 2 frames
-      if (frame % 2 === 0) spawn()
+      if (frame % 4 === 0) spawn()
 
       for (let i = embers.length - 1; i >= 0; i--) {
         const e = embers[i]
@@ -69,7 +70,7 @@ export default function EmberParticles() {
         ctx.globalAlpha = alpha
         ctx.fillStyle = e.color
         ctx.shadowColor = e.color
-        ctx.shadowBlur = 8
+        ctx.shadowBlur = 5
         ctx.beginPath()
         ctx.arc(e.x, e.y, e.size * (1 - t * 0.4), 0, Math.PI * 2)
         ctx.fill()
@@ -82,11 +83,33 @@ export default function EmberParticles() {
       animId = requestAnimationFrame(tick)
     }
 
-    tick()
+    const start = () => {
+      if (animId === null && document.visibilityState !== 'hidden' && !motionPreference.matches) {
+        animId = requestAnimationFrame(tick)
+      }
+    }
+
+    const stop = () => {
+      if (animId !== null) cancelAnimationFrame(animId)
+      animId = null
+    }
+
+    const updateAnimation = () => {
+      if (document.visibilityState === 'hidden' || motionPreference.matches) stop()
+      else start()
+    }
+
+    resize()
+    start()
+    window.addEventListener('resize', resize, { passive: true })
+    document.addEventListener('visibilitychange', updateAnimation)
+    motionPreference.addEventListener('change', updateAnimation)
 
     return () => {
-      cancelAnimationFrame(animId)
+      stop()
       window.removeEventListener('resize', resize)
+      document.removeEventListener('visibilitychange', updateAnimation)
+      motionPreference.removeEventListener('change', updateAnimation)
     }
   }, [])
 

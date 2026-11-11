@@ -103,9 +103,9 @@ export default function Leaderboard() {
                   <div className={`font-cinzel text-[10px] text-center ${p.faction === 'Free Peoples' ? 'text-blue-300' : 'text-red-400'}`}>
                     {p.faction === 'Free Peoples' ? '🤍' : '👁️'} {p.faction}
                   </div>
-                  <div className="font-cinzel text-sm text-center text-ember">{p.kills.toLocaleString()}</div>
-                  <div className="font-cinzel text-sm text-center text-parchment/30">{p.deaths.toLocaleString()}</div>
-                  <div className="font-cinzel text-sm text-center text-gold">{p.score.toLocaleString()}</div>
+                  <div className="font-cinzel text-sm text-center text-ember">{p.kills.toLocaleString('en-US')}</div>
+                  <div className="font-cinzel text-sm text-center text-parchment/30">{p.deaths.toLocaleString('en-US')}</div>
+                  <div className="font-cinzel text-sm text-center text-gold">{p.score.toLocaleString('en-US')}</div>
                 </TableRow>
               ))}
             </motion.div>

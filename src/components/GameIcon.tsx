@@ -1,15 +1,12 @@
-'use client'
-
-import type { FC, SVGProps } from 'react'
+import type { LucideIcon } from 'lucide-react'
 
 type Props = {
-  icon: FC
+  icon: LucideIcon
   size?: number
   color?: string
   className?: string
 }
 
 export default function GameIcon({ icon: Icon, size = 34, color = '#c9a84c', className }: Props) {
-  const Comp = Icon as FC<SVGProps<SVGSVGElement>>
-  return <Comp width={size} height={size} fill={color} className={className} />
+  return <Icon width={size} height={size} color={color} strokeWidth={1.5} className={className} />
 }

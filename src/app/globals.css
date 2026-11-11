@@ -50,19 +50,6 @@ body::before {
   background: #c9a84c88;
 }
 
-/* Gallery horizontal scroll */
-.gallery-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(201, 168, 76, 0.3) transparent;
-}
-.gallery-scroll::-webkit-scrollbar {
-  height: 4px;
-}
-.gallery-scroll::-webkit-scrollbar-thumb {
-  background: rgba(201, 168, 76, 0.3);
-  border-radius: 2px;
-}
-
 /* Section divider line */
 .divider-gold {
   height: 1px;

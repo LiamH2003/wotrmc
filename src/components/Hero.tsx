@@ -20,12 +20,19 @@ export default function Hero() {
 
   useEffect(() => {
     fetch('/api/players')
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error(`Minecraft server status request failed (${r.status})`)
+        return r.json()
+      })
       .then((d) => {
         setPlayerCount(d.online)
         setServerOnline(d.serverOnline)
       })
-      .catch(() => {})
+      .catch((error: unknown) => {
+        console.error('Unable to load Minecraft server status:', error)
+        setPlayerCount(null)
+        setServerOnline(false)
+      })
   }, [])
 
   const ease = 'cubic-bezier(0.22,1,0.36,1)'
